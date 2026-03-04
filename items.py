@@ -6,7 +6,14 @@
 import scrapy
 
 
-class BmwScraperItem(scrapy.Item):
+class BmwCarItem(scrapy.Item):
+    """
+    Scrapy Item for storing collected data about BMW cars.
+
+    This class defines the data structure extracted from the detailed
+    specifications page (Detail Page) of each car listing.
+    All fields comply with the requirements of the technical task.
+    """
     model = scrapy.Field()
     name = scrapy.Field()
     mileage = scrapy.Field()

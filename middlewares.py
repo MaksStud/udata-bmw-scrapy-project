@@ -6,7 +6,10 @@
 from scrapy import signals
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+import random
+import logging
+import scrapy
+from typing import List
 
 
 class BmwScraperSpiderMiddleware:
@@ -98,3 +101,44 @@ class BmwScraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+class RandomUserAgentMiddleware:
+    """
+    Downloader Middleware that rotates the User-Agent header for each request.
+
+    This fulfills the requirements to:
+    - Maintain a list of at least 5 different User-Agent strings.
+    - Randomly select and set a User-Agent for each outgoing request.
+    - Log the selected User-Agent at the DEBUG level.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initializes the middleware with a predefined list of User-Agents.
+        """
+        self.user_agents: List[str] = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Firefox/121.0',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile/15E148 Safari/604.1',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+        ]
+
+    def process_request(self, request: scrapy.Request, spider: scrapy.Spider) -> None:
+        """
+        Processes each request before it goes to the downloader, attaching
+        a randomly selected User-Agent to the headers.
+
+        :param request: The request being processed.
+        :type request: scrapy.Request
+        :param spider: The spider that generated the request.
+        :type spider: scrapy.Spider
+        :return: None. Returning None tells Scrapy to continue processing the request.
+        :rtype: None
+        """
+        user_agent = random.choice(self.user_agents)
+
+        request.headers['User-Agent'] = user_agent.encode('utf-8')
+
+        spider.log(f"Selected User-Agent: {user_agent}", level=logging.DEBUG)
