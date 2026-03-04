@@ -9,7 +9,7 @@ class BmwSpider(scrapy.Spider):
     """
     Spider for scraping BMW Approved Used Cars listings using Playwright.
 
-    Navigates through search result pages, extracts car links, and 
+    Navigates through search result pages, extracts car links, and
     fetches detailed specifications for each vehicle.
     """
     name = "bmw_uk"
@@ -43,7 +43,7 @@ class BmwSpider(scrapy.Spider):
 
     def parse(self, response: Response) -> Generator[scrapy.Request, None, None]:
         """
-        Parses the search results page, yields requests for detail pages, 
+        Parses the search results page, yields requests for detail pages,
         and handles pagination logic.
 
         :param response: The HTTP response from the search results page.

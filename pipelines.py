@@ -95,7 +95,7 @@ class SQLitePipeline:
 
     def process_item(self, item: scrapy.Item, spider: scrapy.Spider) -> scrapy.Item:
         """
-        Inserts the scraped item into the database. Ignores duplicates based on 
+        Inserts the scraped item into the database. Ignores duplicates based on
         the registration primary key.
 
         :param item: The scraped item to be stored.
